@@ -134,6 +134,11 @@ type MicrowaveState = {
     productId?: ProductId;
 };
 
+type TrayState = {
+    customerId?: number;
+    items: OrderItem[];
+};
+
 type FeedbackTone = 'info' | 'success' | 'warning' | 'error' | 'heat';
 type PurchaseGuidance = 'shortage' | 'normal' | 'overstock';
 type ToastState = {
@@ -212,6 +217,7 @@ export class MonsterStorePrototype extends Component {
     private purchaseCart: ProductStock = createProductStock();
     private restocking = new Map<ProductId, number>();
     private microwave: MicrowaveState = { mode: 'idle', remaining: 0 };
+    private tray: TrayState = { items: [] };
     private shiftRemaining = this.shiftRules.shiftSeconds;
     private revenue = 0;
     private goodsCost = 0;
@@ -331,6 +337,7 @@ export class MonsterStorePrototype extends Component {
                 if (this.microwave.customerId === customer.id) {
                     this.microwave = { mode: 'idle', remaining: 0 };
                 }
+                this.clearTrayForCustomer(customer.id);
                 if (this.activeCustomerIndex === index) {
                     this.activeCustomerIndex = this.chooseNextCustomerIndex(index);
                 }
@@ -475,6 +482,7 @@ export class MonsterStorePrototype extends Component {
         if (leavingCustomerId && this.microwave.customerId === leavingCustomerId) {
             this.microwave = { mode: 'idle', remaining: 0 };
         }
+        this.clearTrayForCustomer(leavingCustomerId);
         this.checkAutoCloseWhenSoldOut();
         if (this.closingRequested) {
             this.customers.splice(index, 1);
@@ -1194,6 +1202,8 @@ export class MonsterStorePrototype extends Component {
 
         const tray = this.drawDeliveryTray(workstationBand, DELIVERY_PAD_X, this.getScaledEquipmentBaseY(120, DELIVERY_PAD_SCALE));
         tray.setScale(new Vec3(DELIVERY_PAD_SCALE, DELIVERY_PAD_SCALE, 1));
+        this.renderTrayContents(tray);
+        tray.on(Node.EventType.TOUCH_END, () => this.handleTrayTap(), this);
         const cashier = this.drawCashier(workstationBand, CASHIER_X, this.getScaledEquipmentBaseY(169, CASHIER_SCALE));
         cashier.setScale(new Vec3(CASHIER_SCALE, CASHIER_SCALE, 1));
     }
@@ -1267,6 +1277,48 @@ export class MonsterStorePrototype extends Component {
             this.addSurface(tray, 'TrayPadShadow', 176, 6, 3, this.color(221, 211, 198), -4, -14);
         }
         return tray;
+    }
+
+    private renderTrayContents(tray: Node) {
+        const errorActive = Boolean(this.errorFx && (this.errorFx.target === 'tray' || this.errorFx.target === 'both'));
+        if (errorActive) {
+            const glow = this.createNode('TrayErrorGlow', 260, 132, tray);
+            this.drawRect(glow, 260, 132, 28, this.color(216, 67, 67, 76));
+        }
+
+        if (this.tray.items.length === 0) {
+            return;
+        }
+
+        const customer = this.getTrayCustomer();
+        const ready = customer ? this.isTrayReadyFor(customer) : false;
+        const labelFill = ready ? this.color(103, 199, 165, 238) : this.color(120, 89, 143, 228);
+        this.addLabel(
+            tray,
+            ready ? 'READY' : `给${this.getCustomerSide(this.tray.customerId)}`,
+            0,
+            42,
+            ready ? 20 : 15,
+            this.color(255, 255, 255),
+            true,
+            ready ? 98 : 122,
+            labelFill,
+        );
+
+        const spacing = this.tray.items.length >= 3 ? 48 : 58;
+        const startX = -((this.tray.items.length - 1) * spacing) / 2;
+        this.tray.items.forEach((item, index) => {
+            const slot = this.createNode(`TrayItem-${index}`, 48, 48, tray);
+            slot.setPosition(startX + index * spacing, -4, 0);
+            this.drawRect(slot, 48, 48, 13, this.color(255, 255, 255, 226), this.color(51, 33, 62, 160), 2);
+            this.addProductSprite(slot, item.productId, 39);
+            if (item.heated) {
+                const heat = this.createNode(`TrayHeat-${index}`, 22, 22, tray);
+                heat.setPosition(startX + index * spacing + 22, 19, 0);
+                this.drawRect(heat, 22, 22, 11, this.color(255, 98, 84), this.color(255, 255, 255), 2);
+                this.addLabel(heat, '火', 0, 0, 13, this.color(255, 255, 255), true, 18);
+            }
+        });
     }
 
     private drawCashier(parent: Node, x: number, baseY: number): Node {
@@ -1949,6 +2001,57 @@ export class MonsterStorePrototype extends Component {
         return 0;
     }
 
+    private getTrayCustomer(): CustomerState | undefined {
+        return this.customers.find((customer) => customer.id === this.tray.customerId);
+    }
+
+    private isTrayLockedForOtherCustomer(customer: CustomerState): boolean {
+        return this.tray.customerId !== undefined && this.tray.customerId !== customer.id;
+    }
+
+    private ensureTrayForCustomer(customer: CustomerState, productId: ProductId | undefined, x: number, y: number): boolean {
+        if (this.isTrayLockedForOtherCustomer(customer)) {
+            this.setFeedback(`托盘正在准备${this.getCustomerSide(this.tray.customerId)}顾客订单，先完成这份托盘`, 'warning', x, y);
+            this.setErrorFx(customer.id, productId, 'tray');
+            this.render();
+            this.shakeTray();
+            return false;
+        }
+        if (this.tray.customerId === undefined) {
+            this.tray.customerId = customer.id;
+        }
+        return true;
+    }
+
+    private addTrayItem(customer: CustomerState, item: OrderItem) {
+        this.tray.customerId = customer.id;
+        this.tray.items.push(item);
+    }
+
+    private clearTray() {
+        this.tray = { items: [] };
+    }
+
+    private clearTrayForCustomer(customerId: number | undefined) {
+        if (customerId !== undefined && this.tray.customerId === customerId) {
+            this.clearTray();
+        }
+    }
+
+    private isTrayReadyFor(customer: CustomerState): boolean {
+        if (this.tray.customerId !== customer.id || this.tray.items.length === 0) {
+            return false;
+        }
+        const prepared = [...customer.served, ...this.tray.items];
+        return customer.order.every((item) => prepared.some((candidate) => this.sameItem(candidate, item)));
+    }
+
+    private getMissingTrayItemNames(customer: CustomerState): string[] {
+        return customer.order
+            .filter((item) => !this.isItemPrepared(customer, item))
+            .map((item) => PRODUCT_CATALOG[item.productId].displayName);
+    }
+
     private handleProductTap(productId: ProductId, card: Node) {
         const feedbackX = card.position.x;
         const feedbackY = card.position.y + 140;
@@ -1979,6 +2082,15 @@ export class MonsterStorePrototype extends Component {
         const needed = this.findNeededItem(customer, productId);
 
         if (!needed) {
+            const alreadyPrepared = customer.order.some((item) => (
+                item.productId === productId
+                && this.isItemPrepared(customer, item)
+            ));
+            if (alreadyPrepared) {
+                this.setFeedback(`${PRODUCT_CATALOG[productId].displayName} 已经在托盘里`, 'info', feedbackX, feedbackY);
+                this.render();
+                return;
+            }
             this.combo = 0;
             customer.patience = Math.max(0, customer.patience - 2);
             this.setFeedback(`选错了：${PRODUCT_CATALOG[productId].displayName} 不在当前订单中`, 'error', feedbackX, feedbackY);
@@ -2008,6 +2120,9 @@ export class MonsterStorePrototype extends Component {
                 }
                 return;
             }
+            if (!this.ensureTrayForCustomer(customer, productId, feedbackX, feedbackY)) {
+                return;
+            }
             this.consumeStock(productId);
             this.microwave = {
                 mode: 'heating',
@@ -2015,17 +2130,28 @@ export class MonsterStorePrototype extends Component {
                 customerId: customer.id,
                 productId,
             };
-            this.setFeedback(`${PRODUCT_CATALOG[productId].displayName}已放入${deviceName}，完成后点击设备交付`, 'heat', -220, 210);
+            this.setFeedback(`${PRODUCT_CATALOG[productId].displayName}已放入${deviceName}，完成后点击设备放入托盘`, 'heat', -220, 210);
             this.render();
             this.playProductCorrectFx(productId, customerId);
             this.playMicrowaveStartFx(productId);
             return;
         }
 
+        if (!this.ensureTrayForCustomer(customer, productId, feedbackX, feedbackY)) {
+            return;
+        }
         this.consumeStock(productId);
-        customer.served.push({ productId });
-        this.setFeedback(`已交付：${PRODUCT_CATALOG[productId].displayName}`, 'success', feedbackX, feedbackY);
-        this.checkCompletion();
+        this.addTrayItem(customer, { productId });
+        const ready = this.isTrayReadyFor(customer);
+        this.setFeedback(
+            ready
+                ? '托盘已备齐，点击 READY 托盘交付'
+                : `已放入托盘：${PRODUCT_CATALOG[productId].displayName}`,
+            ready ? 'success' : 'info',
+            feedbackX,
+            feedbackY,
+        );
+        this.render();
         this.resolveUnfulfillableCustomers();
         this.checkAutoCloseWhenSoldOut();
         this.playProductCorrectFx(productId, customerId);
@@ -2068,7 +2194,7 @@ export class MonsterStorePrototype extends Component {
         const needed = customer.order.find((item) => (
             item.productId === productId
             && getProcessingRuleForOrderItem(item)?.deviceId === 'microwave'
-            && !customer.served.some((served) => this.sameItem(served, item))
+            && !this.isItemPrepared(customer, item)
         ));
 
         if (!needed) {
@@ -2077,37 +2203,104 @@ export class MonsterStorePrototype extends Component {
             return;
         }
 
+        if (!this.ensureTrayForCustomer(customer, productId, -220, 210)) {
+            return;
+        }
         const preparedRule = getProcessingRuleForOrderItem(needed);
-        customer.served.push({
+        this.addTrayItem(customer, {
             productId,
             heated: toLegacyHeated(preparedRule?.outputPreparation ?? 'heated'),
         });
         this.microwave = { mode: 'idle', remaining: 0 };
-        this.setFeedback(`${productName}交付成功`, 'success', -220, 210);
-        this.checkCompletion();
+        const ready = this.isTrayReadyFor(customer);
+        this.setFeedback(
+            ready
+                ? '托盘已备齐，点击 READY 托盘交付'
+                : `${productName}已放入托盘`,
+            ready ? 'success' : 'info',
+            -220,
+            210,
+        );
+        this.render();
         this.resolveUnfulfillableCustomers();
         this.checkAutoCloseWhenSoldOut();
-        this.playOrderItemCompleteFx(customerId, productId);
-        this.playMicrowaveServeFx(productId, customerId);
+        this.playProductCorrectFx(productId, customerId);
+        this.playMicrowaveToTrayFx(productId);
+    }
+
+    private handleTrayTap() {
+        if (this.tray.items.length === 0 || this.tray.customerId === undefined) {
+            this.setFeedback('托盘还是空的，先选择订单商品', 'info', 0, 210);
+            this.render();
+            this.shakeTray();
+            return;
+        }
+
+        const customerIndex = this.customers.findIndex((customer) => customer.id === this.tray.customerId);
+        const customer = this.customers[customerIndex];
+        if (customerIndex < 0 || !customer || customer.pendingOutcome) {
+            this.clearTray();
+            this.render();
+            return;
+        }
+
+        if (!this.isTrayReadyFor(customer)) {
+            const missing = this.getMissingTrayItemNames(customer);
+            const firstMissing = customer.order.find((item) => !this.isItemPrepared(customer, item));
+            this.activeCustomerIndex = customerIndex;
+            this.setFeedback(
+                missing.length > 0 ? `托盘还缺：${missing.join('、')}` : '托盘还没备齐',
+                'warning',
+                0,
+                210,
+            );
+            this.setErrorFx(customer.id, firstMissing?.productId, 'both');
+            this.render();
+            this.shakeTray();
+            return;
+        }
+
+        for (const item of this.tray.items) {
+            if (!customer.served.some((served) => this.sameItem(served, item))) {
+                customer.served.push(item);
+            }
+        }
+        this.clearTray();
+        this.activeCustomerIndex = customerIndex;
+        this.setFeedback('托盘交付成功', 'success', 0, 210);
+        this.checkCompletionForIndex(customerIndex);
+        this.resolveUnfulfillableCustomers();
+        this.checkAutoCloseWhenSoldOut();
     }
 
     private checkCompletion() {
-        const customer = this.customers[this.activeCustomerIndex];
+        this.checkCompletionForIndex(this.activeCustomerIndex);
+    }
+
+    private checkCompletionForIndex(index: number) {
+        const customer = this.customers[index];
+        if (!customer || customer.pendingOutcome) {
+            this.render();
+            return;
+        }
         const complete = customer.order.every((item) => (
             customer.served.some((served) => this.sameItem(served, item))
         ));
 
         if (!complete) {
-            this.resolveActiveCustomerIfUnfulfillable();
+            if (index === this.activeCustomerIndex) {
+                this.resolveActiveCustomerIfUnfulfillable();
+            }
             this.render();
             return;
         }
 
-        this.finishCustomerOrder(this.activeCustomerIndex);
+        this.finishCustomerOrder(index);
     }
 
     private finishCustomerOrder(index: number) {
         const customer = this.customers[index];
+        this.clearTrayForCustomer(customer.id);
         const patienceRatio = customer.patience / customer.maxPatience;
         this.combo += 1;
         this.completed += 1;
@@ -2150,7 +2343,10 @@ export class MonsterStorePrototype extends Component {
     }
 
     private getPreparedItems(customer: CustomerState): OrderItem[] {
-        return customer.served;
+        if (this.tray.customerId !== customer.id) {
+            return customer.served;
+        }
+        return [...customer.served, ...this.tray.items];
     }
 
     private isItemPrepared(customer: CustomerState, item: OrderItem): boolean {
@@ -2234,6 +2430,7 @@ export class MonsterStorePrototype extends Component {
         this.stock = createProductStock();
         this.restocking.clear();
         this.microwave = { mode: 'idle', remaining: 0 };
+        this.clearTray();
         for (const productId of this.economy.unlockedProductIds) {
             const amount = Math.min(stockCap, this.economy.warehouseStock[productId]);
             this.stock[productId] = amount;
@@ -2289,6 +2486,7 @@ export class MonsterStorePrototype extends Component {
         if (this.ended) {
             return;
         }
+        this.clearTray();
         if (!this.closingRequested) {
             for (const customer of this.customers) {
                 if (!customer.pendingOutcome) {
@@ -2591,6 +2789,9 @@ export class MonsterStorePrototype extends Component {
     }
 
     private canStillFulfillItem(customer: CustomerState, item: OrderItem): boolean {
+        if (this.tray.customerId === customer.id && this.tray.items.some((prepared) => this.sameItem(prepared, item))) {
+            return true;
+        }
         if (this.stock[item.productId] > 0 || this.economy.warehouseStock[item.productId] > 0) {
             return true;
         }
@@ -2628,6 +2829,7 @@ export class MonsterStorePrototype extends Component {
         if (this.microwave.customerId === customer.id) {
             this.microwave = { mode: 'idle', remaining: 0 };
         }
+        this.clearTrayForCustomer(customer.id);
         this.setFeedback(
             partialIncome > 0
                 ? `${PRODUCT_CATALOG[missingProductId].displayName} 售罄，顾客为已拿商品付款 ${partialIncome} 后离开`
@@ -3155,14 +3357,17 @@ export class MonsterStorePrototype extends Component {
         }
     }
 
-    private playMicrowaveServeFx(productId: ProductId, customerId: number | undefined) {
+    private playMicrowaveToTrayFx(productId: ProductId) {
         const microwave = this.getMicrowaveNode();
-        const item = this.getRenderedOrderItemNode(customerId, productId);
+        const tray = this.getTrayNode();
         if (microwave) {
             GameTweenFx.pop(microwave, 0.04);
         }
-        if (microwave && item) {
-            this.playProductFlyFx(productId, microwave, item);
+        if (tray) {
+            GameTweenFx.pulse(tray, 0.035);
+        }
+        if (microwave && tray) {
+            this.playProductFlyFx(productId, microwave, tray);
         }
     }
 

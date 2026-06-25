@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "c264390c-2ac3-4b0b-9675-211e793ffe3c",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "c264390c-2ac3-4b0b-9675-211e793ffe3c@6c48a",
+      "displayName": "pudding-cup",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "c264390c-2ac3-4b0b-9675-211e793ffe3c",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "c264390c-2ac3-4b0b-9675-211e793ffe3c@f9941",
+      "displayName": "pudding-cup",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -12,
+        "offsetY": 8,
+        "trimX": 53,
+        "trimY": 39,
+        "width": 382,
+        "height": 418,
+        "rawWidth": 512,
+        "rawHeight": 512,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -191,
+            -209,
+            0,
+            191,
+            -209,
+            0,
+            -191,
+            209,
+            0,
+            191,
+            209,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            53,
+            473,
+            435,
+            473,
+            53,
+            55,
+            435,
+            55
+          ],
+          "nuv": [
+            0.103515625,
+            0.107421875,
+            0.849609375,
+            0.107421875,
+            0.103515625,
+            0.923828125,
+            0.849609375,
+            0.923828125
+          ],
+          "minPos": [
+            -191,
+            -209,
+            0
+          ],
+          "maxPos": [
+            191,
+            209,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "c264390c-2ac3-4b0b-9675-211e793ffe3c@6c48a",
+        "atlasUuid": "",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "redirect": "c264390c-2ac3-4b0b-9675-211e793ffe3c@6c48a"
+  }
+}

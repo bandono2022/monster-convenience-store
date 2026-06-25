@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1400" viewBox="0 0 1100 1400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1d2"/>
+      <stop offset="1" stop-color="#e9fff3"/>
+    </linearGradient>
+    <linearGradient id="tealPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#127a72"/>
+      <stop offset="0.55" stop-color="#095c59"/>
+      <stop offset="1" stop-color="#064449"/>
+    </linearGradient>
+    <linearGradient id="redPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7868"/>
+      <stop offset="1" stop-color="#eb403f"/>
+    </linearGradient>
+    <linearGradient id="creamPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff9eb"/>
+      <stop offset="1" stop-color="#fff1d5"/>
+    </linearGradient>
+    <linearGradient id="cardPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf5"/>
+      <stop offset="1" stop-color="#fff1d7"/>
+    </linearGradient>
+    <linearGradient id="pill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#36bfb7"/>
+      <stop offset="1" stop-color="#168a86"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe066"/>
+      <stop offset="0.55" stop-color="#ffbc2e"/>
+      <stop offset="1" stop-color="#f28816"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8ef57"/>
+      <stop offset="1" stop-color="#51b83a"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="7" flood-color="#24323a" flood-opacity="0.22"/>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#24323a" flood-opacity="0.16"/>
+    </filter>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="7" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      .outline { stroke:#2d2236; stroke-width:10; stroke-linecap:round; stroke-linejoin:round; }
+      .thin { stroke:#2d2236; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; }
+      .tiny { stroke:#2d2236; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+      .hl { fill:none; stroke:#ffffff; stroke-width:7; stroke-linecap:round; opacity:.45; }
+      .label { font-family: "Arial Rounded MT Bold", "Arial", sans-serif; font-weight:800; fill:#ffffff; }
+      .darkText { font-family: "Arial Rounded MT Bold", "Arial", sans-serif; font-weight:800; fill:#3d2b4b; }
+      .smallText { font-family: "Arial", sans-serif; font-weight:700; fill:#6f5b73; letter-spacing:0; }
+    </style>
+  </defs>
+
+  <rect width="1100" height="1400" fill="url(#bg)"/>
+  <circle cx="70" cy="90" r="130" fill="#2ab0a7" opacity=".07"/>
+  <circle cx="1030" cy="1240" r="190" fill="#ff7c60" opacity=".06"/>
+
+  <text x="54" y="76" class="darkText" font-size="36">UI style sample v2</text>
+  <text x="55" y="112" class="smallText" font-size="20">Polished casual mobile game UI. Text will be rendered in Cocos.</text>
+
+  <!-- Top HUD row -->
+  <g transform="translate(50 165)" filter="url(#shadow)">
+    <rect x="0" y="0" width="280" height="94" rx="45" fill="url(#tealPanel)" class="outline"/>
+    <path d="M28 23 C70 8 210 12 252 25" class="hl"/>
+    <circle cx="56" cy="47" r="43" fill="url(#gold)" class="thin"/>
+    <path d="M56 21 V72 M40 34 C40 22 74 22 74 36 C74 50 39 45 39 59 C39 74 76 72 76 58" fill="none" stroke="#9b6518" stroke-width="8" stroke-linecap="round"/>
+    <rect x="122" y="29" width="112" height="18" rx="9" fill="#ffffff" opacity=".42"/>
+    <rect x="122" y="57" width="78" height="18" rx="9" fill="#ffffff" opacity=".95"/>
+  </g>
+  <g transform="translate(360 151)" filter="url(#shadow)">
+    <rect x="0" y="0" width="280" height="120" rx="39" fill="url(#redPanel)" class="outline"/>
+    <path d="M30 27 C76 11 206 11 250 26" class="hl"/>
+    <circle cx="70" cy="60" r="42" fill="#fff8ea" class="thin"/>
+    <path d="M70 37 V63 L91 74" fill="none" stroke="#e74742" stroke-width="8" stroke-linecap="round"/>
+    <rect x="132" y="36" width="98" height="22" rx="11" fill="#ffffff" opacity=".5"/>
+    <rect x="129" y="69" width="122" height="25" rx="13" fill="#ffffff" opacity=".95"/>
+  </g>
+  <g transform="translate(670 165)" filter="url(#shadow)">
+    <rect x="0" y="0" width="240" height="94" rx="45" fill="url(#tealPanel)" class="outline"/>
+    <path d="M27 23 C65 10 177 10 213 23" class="hl"/>
+    <path d="M54 15 L66 41 L94 44 L73 62 L78 90 L54 76 L30 90 L35 62 L14 44 L42 41 Z" fill="url(#gold)" class="thin"/>
+    <rect x="116" y="29" width="82" height="18" rx="9" fill="#ffffff" opacity=".44"/>
+    <rect x="116" y="57" width="58" height="18" rx="9" fill="#ffffff" opacity=".95"/>
+  </g>
+  <g transform="translate(920 159)" filter="url(#shadow)">
+    <circle cx="40" cy="53" r="50" fill="#149b8b" class="outline"/>
+    <rect x="25" y="28" width="13" height="50" rx="6" fill="#fff7e7"/>
+    <rect x="45" y="28" width="13" height="50" rx="6" fill="#fff7e7"/>
+    <path d="M18 23 C32 9 56 9 68 23" class="hl"/>
+  </g>
+
+  <!-- Order bubble -->
+  <g transform="translate(70 345)" filter="url(#shadow)">
+    <path d="M0 40 Q0 0 40 0 H445 Q485 0 485 40 V205 Q485 245 445 245 H122 L82 291 L87 245 H40 Q0 245 0 205 Z" fill="url(#creamPanel)" class="outline"/>
+    <path d="M34 28 C118 12 360 12 448 30" class="hl"/>
+    <g transform="translate(88 52)">
+      <rect width="120" height="120" rx="22" fill="#ffffff" class="tiny"/>
+      <path d="M38 32 h44 l9 62 h-62 z" fill="#ff604d" class="tiny"/>
+      <path d="M42 48 C54 36 75 36 84 51 C75 62 59 69 45 62 Z" fill="#ffd34e" class="tiny"/>
+      <circle cx="60" cy="78" r="10" fill="#2d2236"/>
+    </g>
+    <g transform="translate(245 52)">
+      <rect width="120" height="120" rx="22" fill="#ffffff" class="tiny"/>
+      <path d="M47 24 h34 v18 h-34 z" fill="#0e835a" class="tiny"/>
+      <path d="M39 42 h50 l8 64 h-66 z" fill="#ffe36a" class="tiny"/>
+      <path d="M43 45 h42 l6 54 h-54 z" fill="#2aa77d"/>
+      <circle cx="64" cy="72" r="20" fill="#ffd65a" stroke="#fff7b9" stroke-width="5"/>
+    </g>
+    <g transform="translate(46 183)">
+      <circle cx="25" cy="28" r="27" fill="#ff6259" class="tiny"/>
+      <path d="M12 25 C12 13 27 13 25 26 C30 12 46 15 42 29 C39 41 25 49 25 49 C25 49 12 41 12 25 Z" fill="#fff5ec"/>
+      <rect x="62" y="9" width="330" height="38" rx="19" fill="#2d2236"/>
+      <rect x="69" y="16" width="205" height="24" rx="12" fill="#64d7ad"/>
+    </g>
+  </g>
+  <g transform="translate(652 373)">
+    <rect x="0" y="0" width="195" height="54" rx="27" fill="#75509b" class="outline" filter="url(#softShadow)"/>
+    <rect x="35" y="18" width="126" height="18" rx="9" fill="#ffffff" opacity=".88"/>
+  </g>
+
+  <!-- Product card -->
+  <g transform="translate(95 735)" filter="url(#shadow)">
+    <rect width="270" height="350" rx="38" fill="#ff6a61" class="outline"/>
+    <rect x="13" y="13" width="244" height="324" rx="30" fill="url(#cardPanel)"/>
+    <path d="M39 28 C95 13 195 13 235 28" class="hl"/>
+    <g transform="translate(62 70)">
+      <path d="M35 20 h112 l15 138 h-142 z" fill="#ff5c4d" class="thin"/>
+      <path d="M37 20 l14 -15 l13 15 l14 -15 l13 15 l14 -15 l13 15 l14 -15 l13 15" fill="none" stroke="#2d2236" stroke-width="6"/>
+      <path d="M52 70 C82 38 126 43 145 78 C122 101 78 110 53 95 Z" fill="#ffd64f" class="tiny"/>
+      <circle cx="91" cy="112" r="28" fill="#ee3c34" class="tiny"/>
+      <circle cx="96" cy="111" r="9" fill="#2d2236"/>
+      <circle cx="99" cy="107" r="3" fill="#fff"/>
+    </g>
+    <rect x="64" y="236" width="142" height="20" rx="10" fill="#382744" opacity=".2"/>
+    <rect x="46" y="276" width="178" height="50" rx="24" fill="url(#pill)" class="tiny"/>
+    <circle cx="72" cy="301" r="21" fill="url(#gold)" class="tiny"/>
+    <rect x="108" y="289" width="76" height="18" rx="9" fill="#fff" opacity=".85"/>
+    <g transform="translate(203 8)">
+      <circle cx="30" cy="30" r="33" fill="url(#gold)" class="thin"/>
+      <path d="M30 10 L38 25 L55 28 L43 40 L46 57 L30 49 L14 57 L17 40 L5 28 L22 25 Z" fill="#fff6bd"/>
+    </g>
+    <g transform="translate(143 -16)">
+      <rect width="112" height="50" rx="25" fill="url(#pill)" class="tiny"/>
+      <rect x="30" y="16" width="54" height="15" rx="8" fill="#fff" opacity=".9"/>
+    </g>
+  </g>
+
+  <!-- Alternate product states -->
+  <g transform="translate(420 760)" filter="url(#shadow)">
+    <rect width="220" height="270" rx="33" fill="#ffd457" class="outline"/>
+    <rect x="11" y="11" width="198" height="248" rx="26" fill="url(#cardPanel)"/>
+    <g transform="translate(61 42)">
+      <path d="M52 10 h51 v28 h-51 z" fill="#f36f8a" class="tiny"/>
+      <path d="M41 38 h74 l9 112 h-92 z" fill="#fff1f4" class="tiny"/>
+      <path d="M47 43 h62 l8 100 h-78 z" fill="#f58ba0"/>
+      <path d="M75 78 C88 58 112 67 109 89 C106 111 80 121 65 107 C51 94 59 75 75 78 Z" fill="#ff5049" class="tiny"/>
+      <path d="M88 72 C91 63 100 58 109 56" fill="none" stroke="#27a862" stroke-width="7"/>
+    </g>
+    <rect x="41" y="205" width="138" height="42" rx="21" fill="url(#pill)" class="tiny"/>
+    <rect x="78" y="218" width="64" height="14" rx="7" fill="#fff" opacity=".85"/>
+    <g transform="translate(8 7)">
+      <rect width="90" height="42" rx="21" fill="#ffc846" class="tiny"/>
+      <path d="M35 12 C47 3 62 11 61 26 C59 39 42 39 39 27 C31 36 18 28 22 17 C24 11 30 10 35 12 Z" fill="#fff8d6"/>
+    </g>
+  </g>
+
+  <!-- Badges -->
+  <g transform="translate(705 742)">
+    <g transform="translate(0 0)" filter="url(#softShadow)">
+      <circle cx="44" cy="44" r="42" fill="#ff644e" class="outline"/>
+      <path d="M44 18 C56 34 31 40 45 62 C63 52 64 30 52 20 C69 28 78 48 71 64 C62 85 27 85 18 64 C12 51 17 36 30 27 C29 43 39 41 44 18 Z" fill="#fff3d5"/>
+    </g>
+    <g transform="translate(112 0)" filter="url(#softShadow)">
+      <circle cx="44" cy="44" r="42" fill="#70bf3c" class="outline"/>
+      <path d="M23 46 L39 62 L67 28" fill="none" stroke="#fff8df" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g transform="translate(0 112)" filter="url(#softShadow)">
+      <rect width="150" height="68" rx="34" fill="#32aaa4" class="outline"/>
+      <circle cx="34" cy="34" r="23" fill="url(#gold)" class="tiny"/>
+      <rect x="72" y="23" width="48" height="21" rx="10" fill="#fff" opacity=".9"/>
+    </g>
+    <g transform="translate(178 112)" filter="url(#softShadow)">
+      <rect width="150" height="68" rx="34" fill="#75509b" class="outline"/>
+      <path d="M39 19 C51 8 66 18 63 34 C75 29 86 37 82 51 C77 69 48 70 39 56 C30 69 11 59 17 42 C20 31 29 27 39 19 Z" fill="#fff2ce"/>
+      <rect x="79" y="24" width="42" height="19" rx="10" fill="#fff" opacity=".9"/>
+    </g>
+    <g transform="translate(0 222)" filter="url(#softShadow)">
+      <path d="M0 24 Q0 0 24 0 H238 Q262 0 262 24 V80 Q262 104 238 104 H24 Q0 104 0 80 Z" fill="#ff5f55" class="outline"/>
+      <path d="M27 23 C78 9 187 9 234 23" class="hl"/>
+      <rect x="54" y="37" width="154" height="26" rx="13" fill="#fff" opacity=".86"/>
+    </g>
+  </g>
+
+  <!-- Feedback plaques -->
+  <g transform="translate(90 1160)" filter="url(#shadow)">
+    <path d="M0 45 Q0 0 45 0 H312 Q357 0 357 45 V90 Q357 135 312 135 H45 Q0 135 0 90 Z" fill="#2f2540" class="outline"/>
+    <path d="M38 28 C94 10 260 10 320 28" class="hl"/>
+    <path d="M56 40 L69 68 L99 72 L77 92 L83 123 L56 108 L29 123 L35 92 L13 72 L43 68 Z" fill="url(#gold)" class="thin"/>
+    <rect x="126" y="47" width="156" height="24" rx="12" fill="#fff" opacity=".9"/>
+    <rect x="126" y="83" width="106" height="17" rx="9" fill="#fff" opacity=".45"/>
+  </g>
+  <g transform="translate(520 1155)" filter="url(#shadow)">
+    <path d="M0 55 C0 20 26 0 60 0 H290 C325 0 350 20 350 55 C350 91 325 112 290 112 H220 L184 145 L194 112 H60 C26 112 0 91 0 55 Z" fill="#fff6df" class="outline"/>
+    <path d="M39 26 C104 11 247 11 311 25" class="hl"/>
+    <circle cx="68" cy="56" r="34" fill="url(#gold)" class="thin"/>
+    <rect x="124" y="39" width="142" height="22" rx="11" fill="#2d2236" opacity=".76"/>
+    <rect x="124" y="72" width="92" height="15" rx="8" fill="#2d2236" opacity=".27"/>
+  </g>
+
+  <!-- Bottom note placeholders -->
+  <g transform="translate(50 1328)">
+    <rect x="0" y="0" width="900" height="2" fill="#2d2236" opacity=".14"/>
+    <text x="0" y="38" class="smallText" font-size="18">Review only: component shapes, strokes, colors, highlights, and scale. Not integrated into the game scene.</text>
+  </g>
+</svg>

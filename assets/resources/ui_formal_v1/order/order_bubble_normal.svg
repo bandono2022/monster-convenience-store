@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="190" viewBox="0 0 300 190">
+  <defs>
+    <linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffaf0"/><stop offset="1" stop-color="#fff0d4"/></linearGradient>
+  </defs>
+  <rect x="10" y="13" width="280" height="163" rx="34" fill="#34243b" opacity=".18"/>
+  <path d="M48 158L36 186l42-27z" fill="#34243b" opacity=".18"/>
+  <path d="M45 154L33 184l43-29z" fill="#24182e" stroke="#24182e" stroke-width="7" stroke-linejoin="round"/>
+  <rect x="3" y="3" width="288" height="166" rx="35" fill="#24182e"/>
+  <path d="M47 153L38 176l31-22z" fill="#8a62a0"/>
+  <rect x="8" y="8" width="278" height="156" rx="30" fill="#8a62a0"/>
+  <path d="M48 148L42 166l23-17z" fill="url(#cream)"/>
+  <rect x="14" y="14" width="266" height="144" rx="24" fill="url(#cream)" stroke="#c4a0d2" stroke-width="3"/>
+  <path d="M32 29C91 12 212 14 264 29" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".38"/>
+  <path d="M29 143C87 156 219 157 266 140" fill="none" stroke="#5f4477" stroke-width="4" stroke-linecap="round" opacity=".22"/>
+</svg>

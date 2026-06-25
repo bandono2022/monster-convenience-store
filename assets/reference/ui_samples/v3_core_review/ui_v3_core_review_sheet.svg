@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1750" viewBox="0 0 1200 1750">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff2d6"/>
+      <stop offset="1" stop-color="#f2fff8"/>
+    </linearGradient>
+    <filter id="sheetShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#4b3540" flood-opacity=".18"/>
+    </filter>
+    <style>
+      .title{font-family:Arial,sans-serif;font-weight:800;fill:#35263d}
+      .note{font-family:Arial,sans-serif;font-weight:700;fill:#6d5f73}
+    </style>
+  </defs>
+  <rect width="1200" height="1750" fill="url(#page)"/>
+  <text x="70" y="82" class="title" font-size="42">Monster Store UI V3 Core Review</text>
+  <text x="70" y="122" class="note" font-size="22">Review-only assets. No gameplay code or Cocos scene integration.</text>
+  <g transform="translate(60 175)" filter="url(#sheetShadow)">
+    <image href="top_hud_panel_v3.svg" width="880" height="150"/>
+  </g>
+  <text x="70" y="380" class="title" font-size="30">Order bubbles</text>
+  <g transform="translate(40 420)" filter="url(#sheetShadow)">
+    <image href="order_bubble_selected_v3.svg" width="470" height="300"/>
+  </g>
+  <g transform="translate(560 420)" filter="url(#sheetShadow)">
+    <image href="order_bubble_normal_v3.svg" width="470" height="300"/>
+  </g>
+  <text x="70" y="785" class="title" font-size="30">Product cards</text>
+  <g transform="translate(90 825)" filter="url(#sheetShadow)">
+    <image href="product_card_selected_v3.svg" width="280" height="360"/>
+  </g>
+  <g transform="translate(430 825)" filter="url(#sheetShadow)">
+    <image href="product_card_normal_v3.svg" width="280" height="360"/>
+  </g>
+  <g transform="translate(770 825)" filter="url(#sheetShadow)">
+    <image href="product_card_normal_v3.svg" width="280" height="360"/>
+  </g>
+  <text x="70" y="1260" class="title" font-size="30">Badges and feedback</text>
+  <g transform="translate(70 1300)" filter="url(#sheetShadow)">
+    <image href="badges_v3.svg" width="620" height="150"/>
+  </g>
+  <g transform="translate(710 1268)" filter="url(#sheetShadow)">
+    <image href="feedback_badge_perfect_v3.svg" width="460" height="210"/>
+  </g>
+  <text x="70" y="1668" class="note" font-size="22">If approved, next step is converting selected pieces into production PNG / nine-slice resources.</text>
+</svg>

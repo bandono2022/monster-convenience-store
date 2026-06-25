@@ -22,6 +22,22 @@
 - 竖屏设计基准 `750 x 1334`
 - 微信开发者工具
 
+## 启动与验证
+
+本项目目前没有 npm 脚本；用 Cocos Creator 打开项目根目录运行。
+
+```bash
+open -a "/Applications/Cocos/Creator/3.8.8/CocosCreator.app" .
+```
+
+在 Cocos Creator 中打开 `assets/scenes/Game.scene`，点击 Preview 验证主流程。
+
+可用下面命令确认本机安装的是 Cocos Creator 3.8.8：
+
+```bash
+"/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/MacOS/CocosCreator" --help
+```
+
 ## 目录
 
 ```text

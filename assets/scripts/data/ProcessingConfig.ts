@@ -29,7 +29,7 @@ export function getProductPreparation(item: ProductVariant | { productId: Produc
     if ('preparation' in item && item.preparation) {
         return item.preparation;
     }
-    return item.heated ? 'heated' : 'normal';
+    return 'heated' in item && item.heated ? 'heated' : 'normal';
 }
 
 export function toLegacyHeated(preparation: ProductPreparation): boolean | undefined {

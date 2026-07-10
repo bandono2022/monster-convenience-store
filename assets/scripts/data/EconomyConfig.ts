@@ -43,10 +43,10 @@ export type UpgradeKind = 'shelf' | 'microwave' | 'store';
 export const PRODUCT_ECONOMY: Record<ProductId, ProductEconomy> = {
     'snack-bag': { buyCost: 3, sellPrice: 9, unlockCost: 0, initiallyUnlocked: true, category: 'snack' },
     'lemon-drink': { buyCost: 4, sellPrice: 12, unlockCost: 0, initiallyUnlocked: true, category: 'drink' },
-    'rice-ball': { buyCost: 5, sellPrice: 16, unlockCost: 130, initiallyUnlocked: false, category: 'ready-food' },
+    'rice-ball': { buyCost: 5, sellPrice: 16, unlockCost: 40, initiallyUnlocked: false, category: 'ready-food' },
     'strawberry-milk': { buyCost: 5, sellPrice: 14, unlockCost: 0, initiallyUnlocked: true, category: 'drink' },
-    'pudding-cup': { buyCost: 7, sellPrice: 20, unlockCost: 280, initiallyUnlocked: false, category: 'ready-food' },
-    'star-candy': { buyCost: 8, sellPrice: 24, unlockCost: 450, initiallyUnlocked: false, category: 'snack' },
+    'pudding-cup': { buyCost: 7, sellPrice: 20, unlockCost: 80, initiallyUnlocked: false, category: 'snack' },
+    'star-candy': { buyCost: 8, sellPrice: 24, unlockCost: 110, initiallyUnlocked: false, category: 'snack' },
 };
 
 export const CATEGORY_NAMES: Record<ProductCategory, string> = {
@@ -62,9 +62,9 @@ export const UPGRADE_MAX_LEVEL: Record<UpgradeKind, number> = {
 };
 
 const UPGRADE_COSTS: Record<UpgradeKind, number[]> = {
-    shelf: [0, 180, 360],
-    microwave: [160, 320, 600],
-    store: [0, 360, 720],
+    shelf: [0, 90, 170],
+    microwave: [60, 120, 220],
+    store: [0, 140, 240],
 };
 
 export function createInitialEconomyState(): EconomyState {
@@ -103,7 +103,7 @@ export function getShiftRules(state: EconomyState): ShiftRules {
             shiftSeconds: 90,
             maxCustomers: 2,
             minItems: 2,
-            maxItems: Math.min(3, state.unlockedProductIds.length),
+            maxItems: Math.min(2, state.unlockedProductIds.length),
             patienceSeconds: 24,
             impatientEnabled: true,
             bulkShopperEnabled: true,

@@ -5628,3 +5628,43 @@ Owner / Brief / Review / Record：
 - 恢复 `settings/v2/packages/information.json`。
 - 只 stage `.gitignore` 和 `docs/LOCAL_TASK_BOARD.md`。
 - 检查 staged diff 只包含这两个文件、`git diff --cached --check` 通过后，提交并 push housekeeping commit。
+
+### 2026-07-10 Coordination + Product + Art/UI + Development/testing：持续推进遗留项收束
+
+状态：`done / remote-updated / dirty-tree-reduced-to-source-art-holdouts`
+
+Owner / Brief / Review / Record：
+
+- Owner：Coordination 负责持续推进和拆包；Product 负责首测 / 商业目标口径；Art/UI 负责 final art provenance 与 source-art 边界；Development/testing 负责 git 安全、exact pathspec 和构建验证。
+- Brief：用户要求“持续推进，把目前这些看不懂的东西先完成”。本轮不做新玩法、不做 final art、不做无边界清理；目标是把脏工作树按价值和风险收束成可解释状态。
+- Review：Product、Art/UI、Development/testing 多轮复核后同意：housekeeping、旧视觉资源 cleanup、旧过程文档 cleanup、代码仍引用的 fallback/probe 资源、项目追溯 docs 可分别落地；final-candidates / manual exports / archive 继续作为 source-art holdouts，不提交、不删除。
+- Record：本节。
+
+已完成并 push：
+
+- `19fca49 Record Bundle A delivery housekeeping`
+  - 提交 `.gitignore` 本地 agent / QA artifact 忽略规则。
+  - 提交 Bundle A push、dirty tree triage、cleanup dry-run 等本地看板记录。
+- `fd6f422 Remove obsolete UI sample assets`
+  - 删除 `314` 个旧视觉资源：旧 `assets/reference/ui_samples/**`、旧 `assets/resources/ui_generated*` / `ui_formal_v1/**`、旧 `gameplay-main-v1` / `gameplay-main-dual-customer-v2` mockup。
+  - 不触碰 `ui_p0`、`ui_probe_gameplay_*`、final-candidates、manual exports、archive。
+- `255f458 Remove obsolete art process docs`
+  - 删除 `34` 个旧 delivery / M1 / P0 计划文档和 `docs/art/ui/*.png` 过程截图。
+  - 按 Art/UI veto 保留 `13` 个 final art provenance 文件：formal plan、V3.1 spec、concepts、targets、V3 index/reference docs。
+- `dbe7cf8 Add legacy fallback gameplay resources`
+  - 提交 `119` 个代码仍引用的 `ui_p0` / `ui_probe_gameplay_*` fallback/probe 资源。
+  - Cocos `web-mobile` build 已跑，CLI 返回历史噪音 `36`，最新日志 `temp/builder/log/web-mobile7-10-2026 17-29.log` 末尾为 `build Task (web-mobile) Finished in (6 s)ms`。
+- `262598d Add project planning provenance docs`
+  - 提交 `54` 个项目追溯文档，包括商业化、产品决策、P0/P1 brief、final art brief、Figma / runtime mapping、QA / 风险 / 资源记录。
+
+本轮安全边界：
+
+- 没有使用 `git add .` 或 `git commit -a`。
+- `settings/v2/packages/information.json` 已恢复；Cocos sid 噪音不提交。
+- `assets/ui/final-candidates/**`、manual Figma exports、`archive/` 没有提交、没有删除、没有移动。
+- 这些 source-art / archive holdouts 已加入 `.gitignore`，避免继续污染日常 `git status`；后续 final art pass 需要时再显式选型、瘦身、改名并移入正式资源路径或外部 art archive。
+
+当前结论：
+
+- “看不懂的脏工作树”已被拆成已完成提交与明确保留的 source-art holdouts。
+- 后续如果继续推进大目标，应回到 gameplay / final art 差距，而不是继续无边界整理。

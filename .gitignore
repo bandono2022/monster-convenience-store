@@ -38,3 +38,12 @@ node_modules/
 .listenhub/
 .playwright-cli/
 output/
+
+#//////////////////////////
+# Local source-art holdouts
+#//////////////////////////
+archive/
+assets/ui/final-candidates.meta
+assets/ui/final-candidates/
+manual-figma-export-2026-07-02/
+manual-figma-export-2026-07-02-normalized/

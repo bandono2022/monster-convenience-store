@@ -1,0 +1,30 @@
+{
+  "pack": "gameplay-feedback-pack",
+  "task": "A-011",
+  "generatedAt": "2026-06-26",
+  "note": "P0 收银反馈变体资源；透明背景；非最终商用品质。",
+  "assets": [
+    {
+      "file": "cashier_income_burst_small.png",
+      "usage": "小号收银入账反馈，占位可接入",
+      "suggestedSize": "180x96",
+      "size": {
+        "width": 180,
+        "height": 96
+      },
+      "background": "transparent",
+      "readiness": "temporary"
+    },
+    {
+      "file": "cashier_income_burst_large.png",
+      "usage": "大号收银入账反馈，占位可接入",
+      "suggestedSize": "280x150",
+      "size": {
+        "width": 280,
+        "height": 150
+      },
+      "background": "transparent",
+      "readiness": "temporary"
+    }
+  ]
+}

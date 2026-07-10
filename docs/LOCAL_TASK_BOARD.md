@@ -5375,3 +5375,256 @@ Owner / Brief / Review / Record：
 - 若用户继续推进，下一轮只做真实 Bundle A exact pathspec staging：
   先复核空暂存区 / 无 `D` / diff check，再执行一次 `git add -- <Bundle A exact pathspecs>`，然后立刻检查 `git diff --cached --name-status` 并停。
 - 不在同一轮 commit，不处理 cleanup、final art、runtime polish 或 evidence 晋升。
+
+### 2026-07-10 Coordination：Bundle A 提交后交付状态整理
+
+状态：`review / committed-local / no-push / no-cleanup`
+
+Owner / Brief / Review / Record：
+
+- Owner：Coordination 负责提交后状态整理、范围控制和后续选项说明。
+- Brief：用户说“继续”。本轮只核对 Bundle A commit 是否已经在本地落地、暂存区是否清空、剩余工作树风险是什么；不 push、不 cleanup、不改 runtime、不生成美术、不继续 polish。
+- Review：沿用 Bundle A 提交前 Product / Art/UI / Development/testing 的最终 Go。Product 边界仍是首测 gameplay candidate；Art/UI 边界仍是非 commercial final art pass；Development/testing 边界仍是 Bundle A staged set 已通过构建与自动 QA。本轮没有新增玩法、美术或工程实现判断。
+- Record：本节。
+
+本轮目标：
+
+- 把交付状态从“准备 staging / commit”更新为“Bundle A 已本地提交，等待用户决定是否 push 或另开 cleanup 盘点”。
+
+目标完成情况：
+
+- 已完成。未执行 `git push`，未执行任何 staging，未处理剩余脏工作树。
+
+当前实现 / 检查结果：
+
+- 当前分支：`main...origin/main [ahead 1]`。
+- 最新 commit：`d842596 Add first-test-live gameplay candidate Bundle A`。
+- `git diff --cached --name-status` 为空，暂存区已清空。
+- 本轮记录写入前，剩余工作树仍然很脏：`2` 个 modified、`361` 个 tracked deletions、`67` 个 untracked porcelain entries / directories；本轮记录写入后额外出现 `docs/LOCAL_TASK_BOARD.md` 的未暂存修改。
+- 主要剩余项仍包括：`.gitignore`、`settings/v2/packages/information.json`、361 个历史资源 / 文档 deletion、未跟踪 archive / 旧资源 / final-candidates / manual figma export / 大量 docs。
+
+目前进度：
+
+- Bundle A 已作为本地 commit 落地，内容代表 `first-test-live` / P1-027 首测 gameplay candidate。
+- 当前 repo 仍处于“本地 ahead 1 且工作树很脏”的交付前状态。
+
+未解决问题：
+
+- 是否 push `main` 到 `origin/main` 仍需用户明确授权。
+- 361 个 tracked deletions 需要独立 cleanup 决策，不能混入 Bundle A。
+- `.gitignore` 和 `settings/v2/packages/information.json` 继续排除，除非用户开 housekeeping 小轮。
+- Bundle A 不是 commercial final art pass；READY、金币、状态件、字体和最终美术质量仍待 final art 阶段。
+- `MonsterStorePrototype.ts` 仍保留旧资源 fallback 字符串，不能宣称旧资源依赖已完全移除。
+
+下一步计划：
+
+- 如果用户要交付远端：下一轮只做 `git push origin main` 前复核与 push，完成后停。
+- 如果用户不 push：下一轮应只做剩余脏工作树专项盘点，给出可删除 / 可保留 / 需确认三类清单，仍不自动 cleanup。
+- 不继续 runtime polish、final art、证据晋升或 deletion cleanup，除非用户明确改变目标。
+
+### 2026-07-10 Coordination + Product + Art/UI + Development/testing：剩余脏工作树专项盘点
+
+状态：`review / dirty-tree-triaged / no-stage / no-cleanup / no-push`
+
+Owner / Brief / Review / Record：
+
+- Owner：Coordination 负责范围控制、只读盘点和记录；Product 负责玩家目标 / 商业首测口径；Art/UI 负责资源来源、目标图 fidelity 和 final art 追溯；Development/testing 负责 git 安全和分包风险。
+- Brief：用户说“继续下一轮任务”。由于用户没有明确授权 push，本轮不推送；只盘点 Bundle A commit 后剩余脏工作树，分成可保留、可清理候选、必须用户确认三类。不 stage、不 commit、不 cleanup、不改 runtime、不生成美术。
+- Review：Product、Art/UI、Development/testing 均返回 `Go for triage only / No-go for automatic cleanup`。三方一致反对 bulk cleanup、`git add .`、`git commit -a` 或把 cleanup 与 Bundle A 混包。
+- Record：本节。
+
+本轮目标：
+
+- 让后续线程能看懂“脏工作树到底脏在哪里”，并明确下一步不能自动做什么。
+
+目标完成情况：
+
+- 已完成。未执行任何 staging、cleanup、push 或 runtime 修改。
+
+当前实现 / 检查结果：
+
+- 当前分支仍是 `main...origin/main [ahead 1]`。
+- Bundle A 最新本地 commit 仍是 `d842596 Add first-test-live gameplay candidate Bundle A`。
+- `git diff --cached --name-status` 为空。
+- 当前 porcelain 汇总：`3 M`、`361 D`、`67 ??`。
+- 当前实际未跟踪非 ignored 文件数：`1009`。
+- Modified：
+  - `.gitignore`：新增本地 agent / QA artifact ignore：`.codex/`、`.listenhub/`、`.playwright-cli/`、`output/`。
+  - `docs/LOCAL_TASK_BOARD.md`：本轮和上一轮的统筹记录。
+  - `settings/v2/packages/information.json`：Cocos `sid` 环境噪音。
+- Tracked deletions 主要分布：
+  - `152` in `assets/reference/ui_samples`
+  - `68` in `assets/resources/ui_generated`
+  - `34` in `docs/art/ui`
+  - `34` in `assets/resources/ui_generated_v3`
+  - `30` in `assets/resources/ui_formal_v1`
+  - `21` in `assets/resources/ui_generated_v4`
+  - 其余为旧 mockup、旧 art target、旧 delivery / UI 计划文档。
+- Untracked 实际文件主要分布：
+  - `586` in `assets/ui/final-candidates`
+  - `108` in `archive/art-legacy-2026-06-27/assets`
+  - `47` in `archive/art-legacy-2026-06-27/docs`
+  - `57` in `assets/resources/ui_probe_gameplay_v1`
+  - `40` in `assets/resources/ui_p0`
+  - 其余为 `ui_probe_gameplay_v2/v3`、manual Figma exports、final art / product / QA docs。
+
+三方分类结论：
+
+- 可保留 / 暂不处理：
+  - `d842596` Bundle A 本地 commit 与当前 `first-test-live` / P1-027 口径。
+  - 权威目标图与 Bundle A 当前 runtime namespace `ui_gameplay_final_v1`。
+  - `assets/ui/final-candidates/**`、manual Figma exports、`docs/FINAL_ART_*`、`docs/FIGMA_*`、`docs/ART_*`、`docs/CURRENT_USABLE_ART_RESOURCES.md` 等 final art / source provenance 资料，至少保留到 final art pass 后。
+  - `docs/LOCAL_TASK_BOARD.md` 的本地统筹记录。
+- 可清理候选，但只能单独开 cleanup bundle：
+  - 361 个 tracked deletions，尤其旧 `assets/reference/ui_samples/**`、`assets/resources/ui_generated*`、`assets/resources/ui_formal_v1/**`、旧 mockup、旧过程截图 / art docs。
+  - `archive/art-legacy-2026-06-27/` 若确认已迁往项目外归档根，可从活跃项目树清掉。
+  - `assets/resources/ui_p0*`、`assets/resources/ui_probe_gameplay_*` 可作为旧 runtime / probe 资源清理候选，但必须先验证 fallback 不再依赖。
+- 必须用户确认：
+  - 是否 push `d842596` 到 `origin/main`。
+  - 是否接受 361 个 tracked deletions 进入 cleanup commit。
+  - 是否把 `assets/ui/final-candidates/**`、manual exports 作为独立 source-art bundle 保留 / 提交 / 移到项目外 art archive。
+  - `.gitignore` 是否单独做 housekeeping commit。
+  - `settings/v2/packages/information.json` 是否丢弃本机 Cocos sid 变更；默认不提交。
+
+未解决问题 / 风险：
+
+- `MonsterStorePrototype.ts` 仍有旧资源 fallback 字符串；清理 `ui_p0`、`ui_probe`、`ui_formal`、`ui_generated` 前必须由 Development/testing 验证不会触发 404 或视觉回退异常。
+- 误删 `final-candidates` 或 manual exports 会损失 final art 追溯材料。
+- 把 cleanup 与 Bundle A 混在一起会污染 `d842596` 只代表首测 gameplay candidate 的产品口径。
+- `git add .`、`git commit -a`、批量移动 / 删除当前都属于 No-go。
+
+下一步计划：
+
+- 如果用户要先交付远端：下一轮只做 push 前只读复核，然后执行 `git push origin main`，完成后停。
+- 如果用户要先清工作树：下一轮只做 cleanup dry-run 计划，把 361 deletions 拆成旧参考 / 旧 runtime namespace / 旧文档输出 / housekeeping 四包；仍不真实删除或 stage。
+
+### 2026-07-10 Coordination + Art/UI + Development/testing：Cleanup dry-run 拆包计划
+
+状态：`review / cleanup-dry-run-planned / no-stage / no-delete`
+
+Owner / Brief / Review / Record：
+
+- Owner：Coordination 负责拆包计划；Art/UI 负责旧参考 / 旧资源是否仍有 final art 追溯价值；Development/testing 负责 git pathspec 安全和 fallback 风险。
+- Brief：用户要求“先做 2 再做 1”。本小轮先执行选项 2：只做 cleanup dry-run 计划，把 361 个 tracked deletions 拆包；不真实删除、不 stage、不 commit。
+- Review：沿用上一轮 Product / Art/UI / Development/testing 的 `triage only` 结论。本小轮没有新增删除批准。
+- Record：本节。
+
+本轮目标：
+
+- 把 361 个 tracked deletions 拆成后续可 review 的 cleanup bundles，并明确哪些 untracked 项不能混入 cleanup。
+
+目标完成情况：
+
+- 已完成。未执行 `git add`、未接受 deletion、未移动或删除文件。
+
+Cleanup dry-run bundles：
+
+- Bundle C1：旧参考样本，`153` 个 tracked deletions。
+  - 范围：`assets/reference/ui_samples/**` 与 `assets/reference/ui_samples.meta`。
+  - 口径：旧 UI sample / reference iteration，已不代表当前权威目标图。
+  - Gate：Art/UI 确认这些 reference 已被 `gameplay-main-order-bubble-ready-v2.png` 和 Bundle A 记录取代。
+- Bundle C2：旧 runtime visual namespaces，`157` 个 tracked deletions。
+  - 范围：`assets/resources/ui_generated/**`、`assets/resources/ui_generated_v3/**`、`assets/resources/ui_generated_v4/**`、`assets/resources/ui_formal_v1/**` 与对应 `.meta`。
+  - 口径：旧 runtime / generated / formal UI namespace。
+  - Gate：Development/testing 必须先验证 `MonsterStorePrototype.ts` 旧 fallback 字符串不会导致 404 或视觉回退异常。
+- Bundle C3：旧 art docs / process outputs，`47` 个 tracked deletions。
+  - 范围：`docs/art/**`、`docs/DELIVERY_AND_FEEDBACK_PLAN.md`、`docs/DELIVERY_FEEDBACK_TODO.md`、`docs/M1_VERTICAL_SLICE_ACCEPTANCE.md`、`docs/UI_ART_EXPORT_INDEX.md`、`docs/UI_ART_P0_GENERATION_PLAN.md`。
+  - 口径：旧过程截图、旧计划、旧 art review 输出。
+  - Gate：Product + Art/UI 确认这些文档不再承担当前目标图、final art brief 或首测验收来源。
+- Bundle C4：旧 mockups，`4` 个 tracked deletions。
+  - 范围：`assets/ui/mockups/gameplay-main-v1.png`、`gameplay-main-dual-customer-v2.png` 及其 `.meta`。
+  - 口径：已被当前权威目标图取代的旧 mockup。
+  - Gate：Art/UI 确认不需要继续作为视觉演进对照。
+
+不能混入 cleanup 的 untracked / modified 项：
+
+- Source-art / final-art provenance：`assets/ui/final-candidates/**`，当前实际 `587` 个未跟踪文件 / meta。
+- 项目内归档候选：`archive/art-legacy-2026-06-27/**`，当前 `156` 个未跟踪文件。
+- 旧 probe / P0 runtime sources：`assets/resources/ui_probe_gameplay_*` 共 `78` 个，`assets/resources/ui_p0*` 共 `41` 个；清理前必须先处理 fallback 风险。
+- Manual Figma exports：`manual-figma-export-2026-07-02*` 共 `93` 个；至少保留到 final art provenance 决策后。
+- 未跟踪 docs：`54` 个；需要按 product / art / QA 文档单独决定是否提交、归档或丢弃。
+- `.gitignore`：housekeeping 候选，不能和 deletion cleanup 混包。
+- `settings/v2/packages/information.json`：Cocos sid 环境噪音，默认不提交。
+- `docs/LOCAL_TASK_BOARD.md`：本地统筹记录，默认不混入 Bundle A push。
+
+后续 dry-run 命令建议：
+
+- C1：`git add --dry-run -u -- assets/reference/ui_samples assets/reference/ui_samples.meta`
+- C2：`git add --dry-run -u -- assets/resources/ui_generated assets/resources/ui_generated.meta assets/resources/ui_generated_v3 assets/resources/ui_generated_v3.meta assets/resources/ui_generated_v4 assets/resources/ui_generated_v4.meta assets/resources/ui_formal_v1 assets/resources/ui_formal_v1.meta`
+- C3：`git add --dry-run -u -- docs/art docs/DELIVERY_AND_FEEDBACK_PLAN.md docs/DELIVERY_FEEDBACK_TODO.md docs/M1_VERTICAL_SLICE_ACCEPTANCE.md docs/UI_ART_EXPORT_INDEX.md docs/UI_ART_P0_GENERATION_PLAN.md`
+- C4：`git add --dry-run -u -- assets/ui/mockups/gameplay-main-v1.png assets/ui/mockups/gameplay-main-v1.png.meta assets/ui/mockups/gameplay-main-dual-customer-v2.png assets/ui/mockups/gameplay-main-dual-customer-v2.png.meta`
+
+结论：
+
+- Cleanup 目前只有 dry-run 计划，没有任何真实清理批准。
+- 下一小轮按用户要求进入选项 1：push 前只读复核并推送已有 Bundle A commit `d842596`；脏工作树不会随 push 上传。
+
+### 2026-07-10 Development/testing：Bundle A push 完成
+
+状态：`done / pushed / no-stage / dirty-tree-unchanged`
+
+Owner / Brief / Review / Record：
+
+- Owner：Development/testing 负责 push 前安全复核与 push 后确认；Coordination 负责执行、记录和停止边界。
+- Brief：用户要求“先做 2 再做 1”。在 cleanup dry-run 计划完成后，执行选项 1：只推送已有 Bundle A commit，不 stage、不 cleanup、不把本地脏工作树混入远端。
+- Review：Development/testing gate 通过：当前分支为 `main`，暂存区为空，HEAD 为 `d842596`，`origin/main` 是 HEAD 的祖先，push 是快进。
+- Record：本节。
+
+本轮目标：
+
+- 把本地 Bundle A commit `d842596 Add first-test-live gameplay candidate Bundle A` 推送到 `origin/main`。
+
+目标完成情况：
+
+- 已完成。`git push origin main` 成功。
+
+当前实现 / 检查结果：
+
+- Push 输出：`b97fd8e..d842596 main -> main`。
+- Push 后本地：`d842596 (HEAD -> main, origin/main) Add first-test-live gameplay candidate Bundle A`。
+- Push 后 ahead / behind：`0 / 0`。
+- Push 后远端 `refs/heads/main`：`d8425964350e3dbda7dee7aeaf2fddeec232f31c`。
+- `git diff --cached --name-status` 为空。
+- 本地脏工作树仍存在，且未随 push 上传：`.gitignore`、`docs/LOCAL_TASK_BOARD.md`、`settings/v2/packages/information.json`、361 个 tracked deletions、67 个 porcelain untracked entries。
+
+未解决问题 / 风险：
+
+- Cleanup dry-run 计划已写入本地看板，但没有随本次 push 上传。
+- 361 个 tracked deletions 仍未批准真实 cleanup。
+- `.gitignore` housekeeping、`settings/v2` 环境噪音、final-candidates / manual exports / probe resources 仍需后续分包处理。
+
+下一步计划：
+
+- 本轮到此停止。
+- 若继续推进，应只选一个小方向：cleanup dry-run 实跑 / housekeeping 小提交 / final art source 决策 / 或保持当前交付状态不动。
+
+### 2026-07-10 Coordination + Product + Art/UI + Development/testing：Housekeeping 小提交边界
+
+状态：`review / housekeeping-go / cleanup-source-no-go`
+
+Owner / Brief / Review / Record：
+
+- Owner：Coordination 负责持续推进范围控制；Product 负责当前目标口径；Art/UI 负责 final art / source provenance 保留边界；Development/testing 负责 git 安全路径。
+- Brief：用户要求“现在持续推进，把目前这些我看不懂的东西先完成”。本轮目标是先完成最不危险、最能降低混乱的 housekeeping 小项，不进入 gameplay、final art、bulk cleanup 或 source-art 决策。
+- Review：Product、Art/UI、Development/testing 均同意先做 tiny housekeeping；均反对把 361 tracked deletions、final-candidates、manual exports、probe/P0 资源或未跟踪 docs 混入。
+- Record：本节。
+
+本轮团队结论：
+
+- Go：
+  - `.gitignore` 可提交，用于忽略本地 agent / QA artifact：`.codex/`、`.listenhub/`、`.playwright-cli/`、`output/`。
+  - `docs/LOCAL_TASK_BOARD.md` 可提交，用于记录 Bundle A push、dirty tree triage、cleanup dry-run 计划和当前持续推进边界。
+  - `settings/v2/packages/information.json` 可恢复为 HEAD；diff 只有 Cocos `sid` URL，视为本机环境噪音，不提交。
+- No-go：
+  - 不 stage / commit 361 个 tracked deletions。
+  - 不 stage / commit `assets/ui/final-candidates/**`、manual Figma exports、`archive/`、`ui_p0`、`ui_probe_gameplay_*`、未跟踪 docs。
+  - 不使用 `git add .` 或 `git commit -a`。
+- Conditional later：
+  - 361 deletions 可另开独立 cleanup commit，但必须先做 fallback 依赖检查，尤其 `MonsterStorePrototype.ts` 中的旧资源 fallback 字符串。
+  - final-candidates / manual exports / final art docs 保留到 final art pass 或 source-art bundle 决策后处理。
+
+下一步执行：
+
+- 恢复 `settings/v2/packages/information.json`。
+- 只 stage `.gitignore` 和 `docs/LOCAL_TASK_BOARD.md`。
+- 检查 staged diff 只包含这两个文件、`git diff --cached --check` 通过后，提交并 push housekeeping commit。

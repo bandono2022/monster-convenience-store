@@ -30,3 +30,11 @@ node_modules/
 # WebStorm
 #//////////////////////////
 .idea/
+
+#//////////////////////////
+# Local agent / QA artifacts
+#//////////////////////////
+.codex/
+.listenhub/
+.playwright-cli/
+output/
